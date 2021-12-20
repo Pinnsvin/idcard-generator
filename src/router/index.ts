@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
 import IdCard from '../views/idcard/index.vue'
+import IdCardImage from '@/views/idcard/image.vue'
+import About from '@/views/About.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -9,21 +11,27 @@ const routes: Array<RouteRecordRaw> = [
     component: Home,
     children: [
       {
-        path: '/',
+        path: '/idcard',
         name: '身份证生成',
         components: {
           default: IdCard
         }
+      },
+      {
+        path: '/idcard-image',
+        name: '身份证照片生成',
+        components: {
+          default: IdCardImage
+        }
+      },
+      {
+        path: '/about',
+        name: '关于',
+        components: {
+          default: About
+        }
       }
     ]
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   }
 ]
 

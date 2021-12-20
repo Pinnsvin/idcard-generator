@@ -4,6 +4,8 @@
     class="el-menu-demo"
     mode="horizontal"
     @select="handleSelect"
+    :default-openeds="['basic']"
+    router
   >
     <el-menu-item :index="menu.router" v-for="(menu, index) in menus" :key="index">{{ menu.text }}</el-menu-item>
   </el-menu>
@@ -17,10 +19,16 @@ interface MenuInfo {
 }
 
 export default class HeaderMenu extends Vue {
-  active = '/about';
+  active = '/idcard';
   menus: MenuInfo[] = [
     {
       text: '身份证生成',
+      router: '/idcard'
+    }, {
+      text: '身份证照片生成',
+      router: '/idcard-image'
+    }, {
+      text: '关于',
       router: '/about'
     }
   ];

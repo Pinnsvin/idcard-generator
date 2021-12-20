@@ -24,6 +24,13 @@ const relationData: Array<EnumData> = [
   { text: '孙女', value: '9' }
 ]
 
+const validityTypeData: Array<EnumData> = [
+  { text: '五年期', value: '1' },
+  { text: '十年期', value: '2' },
+  { text: '长期有效', value: '3' },
+  { text: '自定义', value: '4' }
+]
+
 function getRelationByValue(value: string): EnumData | null {
   const relation = relationData.filter((item) => item.value === value)
   return relation != null && relation.length > 0 ? relation[0] : null
@@ -48,6 +55,7 @@ export default {
   cities,
   sexData,
   relationData,
+  validityTypeData,
   WEIGHTEDFACTOR,
   CHECKSUM,
   getRelationByValue,

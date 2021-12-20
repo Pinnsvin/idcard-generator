@@ -17,4 +17,13 @@ declare module 'idCard' {
     number: number
     relation: string
   }
+
+  export interface IdCardImageInput {
+    name: string
+    idCard: string
+    adress: string
+    validityType: string
+    startDate: string
+    endDate: string
+  }
 }

@@ -219,7 +219,7 @@ export default defineComponent({
 }
 .content {
   margin-left: 380px;
-  height: 800px;
+  // height: 800px;
   padding: 20px;
   box-shadow: var(--el-box-shadow-light);
 }
@@ -228,7 +228,3 @@ export default defineComponent({
   margin-bottom: 10px;
 }
 </style>
-
-function getBirthday(arg0: number): string {
-  throw new Error('Function not implemented.')
-}
