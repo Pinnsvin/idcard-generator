@@ -78,7 +78,7 @@
 import IdcardConstant from '@/constant/idcard'
 import { IdCardInfo, IdCardInput } from 'idCard'
 import { generateIdCardInfo, getAge, getBirthday } from '@/utils/IdCardUtils'
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, onMounted, reactive } from 'vue'
 import { RelationContext } from '@/service/idcard/RelationStrategy'
 
 export default defineComponent({
@@ -185,6 +185,10 @@ export default defineComponent({
         tableData.push(generateIdCardInfo(newParams))
       })
     }
+
+    onMounted(() => {
+      onSubmit()
+    })
 
     return {
       areaOptions,
