@@ -5,7 +5,10 @@
         <el-input v-model="formData.name" placeholder="姓名" />
       </el-form-item>
       <el-form-item label="身份证号">
-        <el-input v-model="formData.idCard" placeholder="身份证号" />
+        <el-input v-model="formData.idCard" placeholder="身份证号" @change="onChangeIdCard" />
+      </el-form-item>
+      <el-form-item label="性别">
+        <el-input v-model="state.sexText" placeholder="性别" disabled />
       </el-form-item>
       <el-form-item label="地址">
         <el-input v-model="formData.adress" placeholder="地址" />
@@ -20,7 +23,11 @@
         />
       </el-form-item>
       <el-form-item label="有效期类型">
-        <el-select v-model="formData.validityType" placeholder="有效期类型">
+        <el-select
+          v-model="formData.validityType"
+          placeholder="有效期类型"
+          @change="onChangeValidityType"
+        >
           <el-option
             v-for="item in validityTypeOptions"
             :key="item.value"
@@ -40,16 +47,17 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">生成</el-button>
+        <el-button type="primary" @click="onInit">初始化</el-button>
       </el-form-item>
     </el-form>
   </div>
   <div class="content">
     <div class="content__image">
-      <span class="demonstration">国徽面</span>
+      <p class="content__image__title">国徽面</p>
       <el-image :src="imageData.fontImage" fit="contain"></el-image>
     </div>
     <div class="content__image">
-      <span class="demonstration">人像面</span>
+      <p class="content__image__title">人像面</p>
       <el-image :src="imageData.backImage" fit="contain"></el-image>
     </div>
   </div>
@@ -57,19 +65,58 @@
 
 <script lang="ts">
 import IdcardConstant from '@/constant/idcard'
+import { getSexFromIdCard } from '@/utils/IdCardUtils'
 import { IdCardImageInput } from 'idCard'
 import { defineComponent, onMounted, reactive } from 'vue'
 
+function getNowDate(): string {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = now.getMonth() + 1
+  const date = now.getDate()
+  return `${year}-${month}-${date}`
+}
+
+function addDate(startDate: string, num: number): string {
+  const sDate = new Date(startDate)
+  const year = sDate.getFullYear()
+  const month = sDate.getMonth() + 1
+  const date = sDate.getDate()
+  const newYear = year + num
+  return `${newYear}-${month}-${date}`
+}
 export default defineComponent({
 
-  setup() {
+  props: {
+    name: {
+      type: String
+    },
+    idCard: {
+      type: String
+    }
+  },
+  setup(props) {
+    console.log(props)
+    const initFormData = {
+      name: props.name || '',
+      idCard: props.idCard || '',
+      adress: '北京市东城区长安街一号院',
+      validityType: '1',
+      startDate: getNowDate(),
+      endDate: addDate(getNowDate(), 5)
+    }
+
     const formData = reactive<IdCardImageInput>({
-      name: '',
-      idCard: '',
-      adress: '',
-      validityType: '',
-      startDate: '',
-      endDate: ''
+      name: initFormData.name,
+      idCard: initFormData.idCard,
+      adress: initFormData.adress,
+      validityType: initFormData.validityType,
+      startDate: initFormData.startDate,
+      endDate: initFormData.endDate
+    })
+
+    const state = reactive({
+      sexText: ''
     })
 
     const validityTypeOptions = IdcardConstant.validityTypeData
@@ -78,23 +125,56 @@ export default defineComponent({
       backImage: ''
     })
 
+    const onChangeIdCard = (value: string): void => {
+      if (value != null && value.length === 18) {
+        const sex = getSexFromIdCard(value)
+        state.sexText = IdcardConstant.getSexByValue(sex)?.text as string
+      }
+    }
+
+    const onChangeValidityType = (value: string): void => {
+      switch (value) {
+        case '1':
+          formData.endDate = addDate(formData.startDate, 5)
+          break
+        case '2':
+          formData.endDate = addDate(formData.startDate, 10)
+          break
+        default:
+          formData.endDate = ''
+          break
+      }
+    }
+
     const onSubmit = (): void => {
       console.log('生成中...')
     }
 
+    const onInit = (): void => {
+      formData.name = initFormData.name
+      formData.idCard = initFormData.idCard
+      formData.adress = initFormData.adress
+      formData.validityType = initFormData.validityType
+      formData.startDate = initFormData.startDate
+      formData.endDate = initFormData.endDate
+    }
+
     onMounted(() => {
-      onSubmit()
+      onChangeIdCard(props.idCard as string)
     })
 
     return {
       validityTypeOptions,
       formData,
       imageData,
-      onSubmit
+      state,
+      onChangeIdCard,
+      onChangeValidityType,
+      onSubmit,
+      onInit
     }
   }
 })
-
 </script>
 
 <style lang="less" scoped>
@@ -107,9 +187,13 @@ export default defineComponent({
 }
 .content {
   margin-left: 380px;
-  // height: 800px;
   padding: 20px;
   box-shadow: var(--el-box-shadow-light);
+  &__image {
+    &__title {
+      text-align: lfet;
+    }
+  }
 }
 .el-button {
   width: 95px;

@@ -63,13 +63,22 @@
   </div>
   <div class="content">
     <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column prop="relation" label="关系" />
-      <el-table-column prop="name" label="名字" />
-      <el-table-column prop="idCard" label="身份证号码" width="160" />
-      <el-table-column prop="mobile" label="手机号" />
-      <el-table-column prop="sex" label="性别" />
-      <el-table-column prop="birthday" label="出生日期" />
-      <el-table-column prop="age" label="年龄" />
+      <el-table-column align="center" prop="relation" label="关系" />
+      <el-table-column align="center" prop="name" label="名字" />
+      <el-table-column align="center" prop="idCard" label="身份证号码" width="160" />
+      <el-table-column align="center" prop="mobile" label="手机号" />
+      <el-table-column align="center" prop="sex" label="性别" />
+      <el-table-column align="center" prop="birthday" label="出生日期" />
+      <el-table-column align="center" prop="age" label="年龄" />
+      <el-table-column align="center" fixed="right" label="操作">
+        <template #default="scope">
+          <el-button
+            type="text"
+            size="small"
+            @click="handleGenerateImage(scope.row.name, scope.row.idCard)"
+          >生成照片</el-button>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -80,10 +89,13 @@ import { IdCardInfo, IdCardInput } from 'idCard'
 import { generateIdCardInfo, getAge, getBirthday } from '@/utils/IdCardUtils'
 import { defineComponent, onMounted, reactive } from 'vue'
 import { RelationContext } from '@/service/idcard/RelationStrategy'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
+  emits: ['select'],
+  setup(props, { emit }) {
+    const router = useRouter()
 
-  setup() {
     const formData = reactive<IdCardInput>({
       age: 20,
       sex: '1',
@@ -106,8 +118,8 @@ export default defineComponent({
       formData.birthday = getBirthday(value)
     }
 
-    const onChangeBirthday = (value: string): void => {
-      formData.age = getAge(value)
+    const onChangeBirthday = (payload: Event): void => {
+      formData.age = getAge(payload as unknown as string)
     }
 
     const onChangeAreaCode = (value: Array<string>): void => {
@@ -186,6 +198,19 @@ export default defineComponent({
       })
     }
 
+    const handleGenerateImage = (_name: string, _idCard: string): void => {
+      console.log('生成照片...', _name, _idCard)
+      emit('select', '/idcard-image')
+      router.push({
+        name: 'IdCardImage',
+        // path: '/idcard-image',
+        params: {
+          name: _name,
+          idCard: _idCard
+        }
+      })
+    }
+
     onMounted(() => {
       onSubmit()
     })
@@ -202,7 +227,8 @@ export default defineComponent({
       onSubmit,
       onSubmitWithFamily,
       onSubmitWithParent,
-      onSubmitWithBigFamily
+      onSubmitWithBigFamily,
+      handleGenerateImage
     }
   }
 })
@@ -219,7 +245,6 @@ export default defineComponent({
 }
 .content {
   margin-left: 380px;
-  // height: 800px;
   padding: 20px;
   box-shadow: var(--el-box-shadow-light);
 }

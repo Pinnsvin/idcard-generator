@@ -9,27 +9,23 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     name: 'Home',
     component: Home,
+    redirect: '/idcard',
     children: [
       {
         path: '/idcard',
-        name: '身份证生成',
-        components: {
-          default: IdCard
-        }
+        name: 'IdCard',
+        component: IdCard
       },
       {
         path: '/idcard-image',
-        name: '身份证照片生成',
-        components: {
-          default: IdCardImage
-        }
+        name: 'IdCardImage',
+        component: IdCardImage,
+        props: route => ({ name: route.params.name, idCard: route.params.idCard })
       },
       {
         path: '/about',
         name: '关于',
-        components: {
-          default: About
-        }
+        component: About
       }
     ]
   }

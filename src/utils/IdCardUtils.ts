@@ -1,6 +1,11 @@
 import IdcardConstant from '@/constant/idcard'
-import { IdCardInfo, IdCardInput } from 'idCard'
+import { IdCardImageInfo, IdCardImageInput, IdCardInfo, IdCardInput } from 'idCard'
 
+/**
+ * 根据输入信息生成身份证信息
+ * @param param 输入
+ * @returns 身份证信息
+ */
 export function generateIdCardInfo(param: IdCardInput): IdCardInfo {
   const result: IdCardInfo = {
     idCard: getIdCard(param.areaCode, param.birthday, param.sex),
@@ -10,6 +15,20 @@ export function generateIdCardInfo(param: IdCardInput): IdCardInfo {
     sex: getSex(param.sex),
     birthday: getBirthday(param.age),
     mobile: getMobile()
+  }
+
+  return result
+}
+
+/**
+ * 根据输入信息生成身份证照片
+ * @param params 输入
+ * @returns 身份证照片
+ */
+export function generateIdCardImage(params: IdCardImageInput): IdCardImageInfo {
+  const result: IdCardImageInfo = {
+    fontImage: params.name,
+    backImage: params.name
   }
 
   return result
@@ -39,6 +58,16 @@ function getSex(sex: string): string {
     return sexData == null ? '' : sexData.text
   }
   return ''
+}
+
+/**
+ *  根据身份证号获取性别
+ * @param idCard 身份证号
+ * @returns 性别编码
+ */
+export function getSexFromIdCard(idCard: string): string {
+  const sexNum = idCard.substring(17, 18)
+  return (parseInt(sexNum) % 2).toString()
 }
 
 /**
