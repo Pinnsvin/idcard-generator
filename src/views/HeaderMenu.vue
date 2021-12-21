@@ -11,7 +11,7 @@
   </el-menu>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, reactive } from 'vue'
+import { defineComponent, reactive } from 'vue'
 
 export default defineComponent({
   setup() {

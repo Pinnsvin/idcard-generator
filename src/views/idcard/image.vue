@@ -58,14 +58,8 @@
     </el-form>
   </div>
   <div class="content">
-    <div class="content__image">
-      <p class="content__image__title">国徽面</p>
-      <el-image :src="imageData.fontImage" fit="contain"></el-image>
-    </div>
-    <div class="content__image">
-      <p class="content__image__title">人像面</p>
-      <el-image :src="imageData.backImage" fit="contain"></el-image>
-    </div>
+    <IdCardImage :idCardInfo="formData" :src="imageData.fontImage" :isFont="true"></IdCardImage>
+    <IdCardImage :idCardInfo="formData" :src="imageData.backImage" :isFont="false"></IdCardImage>
   </div>
 </template>
 
@@ -74,6 +68,7 @@ import IdcardConstant from '@/constant/idcard'
 import { getSexFromIdCard } from '@/utils/IdCardUtils'
 import { IdCardImageInput } from 'idCard'
 import { defineComponent, onMounted, reactive } from 'vue'
+import IdCardImage from '@/components/IdCardImage.vue'
 
 function getNowDate(): string {
   const now = new Date()
@@ -92,7 +87,9 @@ function addDate(startDate: string, num: number): string {
   return `${newYear}-${month}-${date}`
 }
 export default defineComponent({
-
+  components: {
+    IdCardImage
+  },
   props: {
     name: {
       type: String
