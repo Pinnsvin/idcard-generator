@@ -1,41 +1,46 @@
 <template>
   <el-menu
-    :default-active="active"
+    :default-active="state.active"
     class="el-menu-demo"
     mode="horizontal"
     @select="handleSelect"
     :default-openeds="['basic']"
     router
   >
-    <el-menu-item :index="menu.router" v-for="(menu, index) in menus" :key="index">{{ menu.text }}</el-menu-item>
+    <el-menu-item :index="menu.router" v-for="(menu, index) in state.menus" :key="index">{{ menu.text }}</el-menu-item>
   </el-menu>
 </template>
 <script lang="ts">
-import { Vue } from 'vue-class-component'
+import { defineComponent, onMounted, reactive } from 'vue'
 
-interface MenuInfo {
-  text: string
-  router: string
-}
+export default defineComponent({
+  setup() {
+    const state = reactive({
+      active: '/idcard',
+      menus: [
+        {
+          text: '身份证生成',
+          router: '/idcard'
+        }, {
+          text: '身份证照片生成',
+          router: '/idcard-image'
+        }, {
+          text: '关于',
+          router: '/about'
+        }
+      ]
+    })
 
-export default class HeaderMenu extends Vue {
-  active = '/idcard';
-  menus: MenuInfo[] = [
-    {
-      text: '身份证生成',
-      router: '/idcard'
-    }, {
-      text: '身份证照片生成',
-      router: '/idcard-image'
-    }, {
-      text: '关于',
-      router: '/about'
+    const handleSelect = (key: string, keyPath: string[]) => {
+      console.log(key, keyPath)
+      state.active = key
     }
-  ];
 
-  public handleSelect (key: any, keyPath: any):void {
-    console.log(key, keyPath)
-    this.active = key
+    return {
+      state,
+      handleSelect
+    }
   }
-}
+})
+
 </script>

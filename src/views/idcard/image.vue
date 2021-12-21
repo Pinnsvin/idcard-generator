@@ -4,14 +4,20 @@
       <el-form-item label="姓名">
         <el-input v-model="formData.name" placeholder="姓名" />
       </el-form-item>
+      <el-form-item label="民族">
+        <el-input v-model="formData.nation" placeholder="民族" />
+      </el-form-item>
       <el-form-item label="身份证号">
         <el-input v-model="formData.idCard" placeholder="身份证号" @change="onChangeIdCard" />
       </el-form-item>
       <el-form-item label="性别">
         <el-input v-model="state.sexText" placeholder="性别" disabled />
       </el-form-item>
-      <el-form-item label="地址">
-        <el-input v-model="formData.adress" placeholder="地址" />
+      <el-form-item label="住址">
+        <el-input v-model="formData.adress" placeholder="住址" />
+      </el-form-item>
+      <el-form-item label="签发机关">
+        <el-input v-model="formData.office" placeholder="签发机关" />
       </el-form-item>
       <el-form-item label="有效期起期">
         <el-date-picker
@@ -99,8 +105,10 @@ export default defineComponent({
     console.log(props)
     const initFormData = {
       name: props.name || '',
+      nation: '汉',
       idCard: props.idCard || '',
       adress: '北京市东城区长安街一号院',
+      office: '北京市公安局',
       validityType: '1',
       startDate: getNowDate(),
       endDate: addDate(getNowDate(), 5)
@@ -108,8 +116,10 @@ export default defineComponent({
 
     const formData = reactive<IdCardImageInput>({
       name: initFormData.name,
+      nation: initFormData.nation,
       idCard: initFormData.idCard,
       adress: initFormData.adress,
+      office: initFormData.office,
       validityType: initFormData.validityType,
       startDate: initFormData.startDate,
       endDate: initFormData.endDate
@@ -121,8 +131,8 @@ export default defineComponent({
 
     const validityTypeOptions = IdcardConstant.validityTypeData
     const imageData = reactive({
-      fontImage: '',
-      backImage: ''
+      fontImage: require('@/assets/image/color/font.png'),
+      backImage: require('@/assets/image/color/back.png')
     })
 
     const onChangeIdCard = (value: string): void => {
@@ -152,8 +162,10 @@ export default defineComponent({
 
     const onInit = (): void => {
       formData.name = initFormData.name
+      formData.nation = initFormData.nation
       formData.idCard = initFormData.idCard
       formData.adress = initFormData.adress
+      formData.office = initFormData.office
       formData.validityType = initFormData.validityType
       formData.startDate = initFormData.startDate
       formData.endDate = initFormData.endDate

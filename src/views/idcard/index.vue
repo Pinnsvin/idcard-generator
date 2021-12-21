@@ -92,8 +92,7 @@ import { RelationContext } from '@/service/idcard/RelationStrategy'
 import { useRouter } from 'vue-router'
 
 export default defineComponent({
-  emits: ['select'],
-  setup(props, { emit }) {
+  setup() {
     const router = useRouter()
 
     const formData = reactive<IdCardInput>({
@@ -199,11 +198,8 @@ export default defineComponent({
     }
 
     const handleGenerateImage = (_name: string, _idCard: string): void => {
-      console.log('生成照片...', _name, _idCard)
-      emit('select', '/idcard-image')
       router.push({
         name: 'IdCardImage',
-        // path: '/idcard-image',
         params: {
           name: _name,
           idCard: _idCard

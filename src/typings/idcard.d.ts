@@ -20,8 +20,10 @@ declare module 'idCard' {
 
   export interface IdCardImageInput {
     name: string
+    nation: string
     idCard: string
     adress: string
+    office: string
     validityType: string
     startDate: string
     endDate: string
