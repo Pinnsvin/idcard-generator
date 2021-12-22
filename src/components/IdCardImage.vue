@@ -2,14 +2,14 @@
   <div class="image">
     <p class="image__title">{{ title }}</p>
     <!-- <img class="image__content" :src="$props.src" /> -->
-    <canvas id="canvas"></canvas>
+    <canvas class="image__canvas" id="canvas" ref="canvas"></canvas>
   </div>
 </template>
 
 <script lang="ts">
 import { watch } from 'fs'
-import { IdCardImageInput } from 'idCard'
-import { computed, defineComponent, onMounted } from 'vue'
+import { nextTick } from 'process'
+import { computed, defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'IdCardImage',
@@ -27,24 +27,39 @@ export default defineComponent({
       required: true
     }
   },
+  // back https://s3.bmp.ovh/imgs/2021/12/cc3873a71e9edb05.png
+  // font https://s3.bmp.ovh/imgs/2021/12/10f6c7697fc2943c.png
   setup(props) {
     console.log(props.idCardInfo)
-    onMounted(() => {
+    const dateStr = computed(() => {
+      if (props.idCardInfo.validityType === '3') {
+        return '长期有效'
+      }
+      return props.idCardInfo.startDate.replaceAll('-', '.') + '-' + props.idCardInfo.endDate.replaceAll('-', '.')
+    })
+    nextTick(() => {
       const canvasElement = document.getElementById('canvas') as HTMLCanvasElement
+      canvasElement.width = 600
+      canvasElement.height = 378
       const context: CanvasRenderingContext2D = canvasElement.getContext('2d') || new CanvasRenderingContext2D()
       const image = new Image(1200)
       image.onload = () => {
-        context.drawImage(image, 0, 0)
-        context.font = '18px serif'
-        context.fillStyle = '#fff'
-        context.fillText(props.idCardInfo.name, 0, 60)
+        context.drawImage(image, 0, 0, canvasElement.width, canvasElement.height)
+        context.font = '20px serif'
+        context.fillStyle = '#000'
+        context.fillText(props.idCardInfo.office, 260, 287)
+        context.fillText(dateStr.value, 260, 330)
       }
-      image.src = 'https://pica.zhimg.com/v2-0bd3e8d457b3510bcae1b8923cfff630_1440w.jpg'
+      image.src = 'https://s3.bmp.ovh/imgs/2021/12/10f6c7697fc2943c.png'
     })
 
     const title = computed(() => {
       return props.isFont ? '国徽面' : '人像面'
     })
+
+    watch(() => props.idCardInfo, (newValue, oldValue) => {
+      console.log(newValue, oldValue)
+    }, { deep: true })
 
     return {
       title
@@ -60,6 +75,9 @@ export default defineComponent({
   }
   &__content {
     width: 800px;
+  }
+  &__canvas {
+    display: block;
   }
 }
 </style>
