@@ -24,10 +24,11 @@ export default defineComponent({
         }, {
           text: '身份证照片生成',
           router: '/idcard-image'
-        }, {
-          text: '关于',
-          router: '/about'
         }
+        // , {
+        //   text: '关于',
+        //   router: '/about'
+        // }
       ]
     })
 

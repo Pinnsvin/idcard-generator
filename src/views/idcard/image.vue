@@ -14,7 +14,7 @@
         <el-input v-model="state.sexText" placeholder="性别" disabled />
       </el-form-item>
       <el-form-item label="住址">
-        <el-input v-model="formData.adress" placeholder="住址" />
+        <el-input v-model="formData.address" placeholder="住址" />
       </el-form-item>
       <el-form-item label="签发机关">
         <el-input v-model="formData.office" placeholder="签发机关" />
@@ -104,7 +104,7 @@ export default defineComponent({
       name: props.name || '',
       nation: '汉',
       idCard: props.idCard || '',
-      adress: '北京市东城区长安街一号院',
+      address: '北京市东城区长安街一号院',
       office: '北京市公安局',
       validityType: '1',
       startDate: getNowDate(),
@@ -115,7 +115,7 @@ export default defineComponent({
       name: initFormData.name,
       nation: initFormData.nation,
       idCard: initFormData.idCard,
-      adress: initFormData.adress,
+      address: initFormData.address,
       office: initFormData.office,
       validityType: initFormData.validityType,
       startDate: initFormData.startDate,
@@ -161,7 +161,7 @@ export default defineComponent({
       formData.name = initFormData.name
       formData.nation = initFormData.nation
       formData.idCard = initFormData.idCard
-      formData.adress = initFormData.adress
+      formData.address = initFormData.address
       formData.office = initFormData.office
       formData.validityType = initFormData.validityType
       formData.startDate = initFormData.startDate
