@@ -58,8 +58,11 @@
     </el-form>
   </div>
   <div class="content">
-    <IdCardImage :idCardInfo="formData" :src="imageData.fontImage" :isFont="true"></IdCardImage>
-    <IdCardImage :idCardInfo="formData" :src="imageData.backImage" :isFont="false"></IdCardImage>
+    <IdCardImage
+      :idCardInfo="formData"
+      :fontSrc="imageData.fontImage"
+      :backSrc="imageData.backImage"
+    ></IdCardImage>
   </div>
 </template>
 

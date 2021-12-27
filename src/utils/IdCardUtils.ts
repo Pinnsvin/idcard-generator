@@ -71,6 +71,29 @@ export function getSexFromIdCard(idCard: string): string {
 }
 
 /**
+ * 根据身份证号获取年月日
+ * @param idCard 身份证号
+ * @returns 年月日
+ */
+export function getBirthdayArrayFromIdCard(idCard: string): Array<string> {
+  const birthday = idCard.substring(6, 14)
+  console.log(birthday)
+  const arr: Array<string> = []
+  arr.push(birthday.substring(0, 4))
+  let month = birthday.substring(4, 6)
+  if (month.startsWith('0')) {
+    month = month.substring(1)
+  }
+  arr.push(month)
+  let date = birthday.substring(6, 8)
+  if (date.startsWith('0')) {
+    date = date.substring(1)
+  }
+  arr.push(date)
+  return arr
+}
+
+/**
  * 根据年龄获取出生日期 yyyy-MM-dd
  * @param age 年龄
  */
