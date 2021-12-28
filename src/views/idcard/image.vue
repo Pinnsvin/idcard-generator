@@ -58,20 +58,22 @@
     </el-form>
   </div>
   <div class="content">
-    <IdCardImage
-      :idCardInfo="formData"
-      :fontSrc="imageData.fontImage"
-      :backSrc="imageData.backImage"
-    ></IdCardImage>
+    <div class="image">
+      <p class="image__title">国徽面</p>
+      <canvas class="image__canvas" id="fontCanvas"></canvas>
+    </div>
+    <div class="image">
+      <p class="image__title">人像面</p>
+      <canvas class="image__canvas" id="backCanvas"></canvas>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import IdcardConstant from '@/constant/idcard'
-import { getSexFromIdCard } from '@/utils/IdCardUtils'
+import { getBirthdayArrayFromIdCard, getSexFromIdCard } from '@/utils/IdCardUtils'
 import { IdCardImageInput } from 'idCard'
-import { defineComponent, onMounted, reactive } from 'vue'
-import IdCardImage from '@/components/IdCardImage.vue'
+import { computed, defineComponent, nextTick, onMounted, reactive } from 'vue'
 
 function getNowDate(): string {
   const now = new Date()
@@ -90,9 +92,6 @@ function addDate(startDate: string, num: number): string {
   return `${newYear}-${month}-${date}`
 }
 export default defineComponent({
-  components: {
-    IdCardImage
-  },
   props: {
     name: {
       type: String
@@ -107,6 +106,7 @@ export default defineComponent({
       name: props.name || '',
       nation: '汉',
       idCard: props.idCard || '',
+      sexText: IdcardConstant.getSexByValue(getSexFromIdCard(props.idCard || ''))?.text || '',
       address: '北京市东城区长安街一号院',
       office: '北京市公安局',
       validityType: '1',
@@ -126,13 +126,21 @@ export default defineComponent({
     })
 
     const state = reactive({
-      sexText: ''
+      sexText: IdcardConstant.getSexByValue(getSexFromIdCard(formData.idCard))?.text || ''
     })
 
     const validityTypeOptions = IdcardConstant.validityTypeData
     const imageData = reactive({
       fontImage: require('@/assets/image/color/font.png'),
-      backImage: require('@/assets/image/color/back.png')
+      backImage: require('@/assets/image/color/back.png'),
+      userImage: require('@/assets/image/user.png')
+    })
+
+    const dateStr = computed(() => {
+      if (formData.validityType === '3') {
+        return '长期有效'
+      }
+      return formData.startDate.replaceAll('-', '.') + '-' + formData.endDate.replaceAll('-', '.')
     })
 
     const onChangeIdCard = (value: string): void => {
@@ -157,7 +165,70 @@ export default defineComponent({
     }
 
     const onSubmit = (): void => {
-      console.log('生成中...')
+      nextTick(() => {
+        const fontCanvasElement = document.getElementById('fontCanvas') as HTMLCanvasElement
+        fontCanvasElement.width = 600
+        fontCanvasElement.height = 378
+        const fontContext: CanvasRenderingContext2D = fontCanvasElement.getContext('2d') || new CanvasRenderingContext2D()
+        const fontImage = new Image(1200)
+        fontImage.onload = () => {
+          fontContext.drawImage(fontImage, 0, 0, fontCanvasElement.width, fontCanvasElement.height)
+          fontContext.font = 'normal normal 300 20px 黑体'
+          fontContext.fillStyle = '#000'
+          fontContext.fillText(formData.office, 260, 287)
+          fontContext.fillText(dateStr.value, 260, 330)
+        }
+        fontImage.src = imageData.fontImage
+
+        const backCanvasElement = document.getElementById('backCanvas') as HTMLCanvasElement
+        backCanvasElement.width = 600
+        backCanvasElement.height = 378
+        const backContext: CanvasRenderingContext2D = backCanvasElement.getContext('2d') || new CanvasRenderingContext2D()
+        const backImage = new Image(1200)
+        const photoImage = new Image(30)
+        backImage.onload = () => {
+          backContext.drawImage(backImage, 0, 0, backCanvasElement.width, backCanvasElement.height)
+          backContext.font = 'normal normal 300 20px 黑体'
+          backContext.fillStyle = '#000'
+          backContext.fillText(formData.name, 115, 85)
+          backContext.fillText(state.sexText, 115, 128)
+          backContext.fillText(formData.nation, 245, 128)
+          const arr = getBirthdayArrayFromIdCard(formData.idCard)
+          backContext.fillText(arr[0], 115, 172)
+          backContext.fillText(arr[1], 210, 172)
+          backContext.fillText(arr[2], 270, 172)
+          const address = formData.address
+          // 地址换行
+          const textWith = 240
+          let lineW = 0
+          let initH = 216
+          let substrIndex = 0
+          for (let i = 0; i < address.length; i++) {
+            lineW += backContext.measureText(address[i]).width
+            if (lineW > textWith) {
+              backContext.fillText(address.substring(substrIndex, i), 115, initH)
+              initH += 28
+              lineW = 0
+              substrIndex = i
+            }
+            if (i === address.length - 1) {
+              backContext.fillText(address.substring(substrIndex, i + 1), 115, initH)
+            }
+          }
+          // backContext.fillText(formData.address, 110, 216)
+          const array = formData.idCard.split('')
+          let idCardText = ''
+          for (let index = 0; index < array.length; index++) {
+            const element = array[index]
+            idCardText += (element + ' ')
+          }
+          backContext.fillText(idCardText, 180, 330)
+
+          backContext.drawImage(photoImage, 385, 60, 180, 200)
+        }
+        photoImage.src = imageData.userImage
+        backImage.src = imageData.backImage
+      })
     }
 
     const onInit = (): void => {
@@ -173,6 +244,9 @@ export default defineComponent({
 
     onMounted(() => {
       onChangeIdCard(props.idCard as string)
+      nextTick(() => {
+        onSubmit()
+      })
     })
 
     return {

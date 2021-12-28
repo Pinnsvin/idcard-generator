@@ -61,6 +61,7 @@ export default defineComponent({
       backCanvasElement.height = 378
       const backContext: CanvasRenderingContext2D = backCanvasElement.getContext('2d') || new CanvasRenderingContext2D()
       const backImage = new Image(1200)
+      const photoImage = new Image(300)
       backImage.onload = () => {
         backContext.drawImage(backImage, 0, 0, backCanvasElement.width, backCanvasElement.height)
         backContext.font = '20px serif'
@@ -75,10 +76,9 @@ export default defineComponent({
         backContext.fillText(props.idCardInfo.address, 110, 216)
         backContext.fillText(props.idCardInfo.idCard, 180, 330)
 
-        const photoImage = new Image(300)
         backContext.drawImage(photoImage, 0, 0, backCanvasElement.width, backCanvasElement.height)
-        photoImage.src = 'https://s3.bmp.ovh/imgs/2021/12/cc3873a71e9edb05.png'
       }
+      photoImage.src = 'https://s3.bmp.ovh/imgs/2021/12/cc3873a71e9edb05.png'
       backImage.src = props.backSrc
     })
 
