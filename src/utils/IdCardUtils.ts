@@ -66,7 +66,8 @@ function getSex(sex: string): string {
  * @returns 性别编码
  */
 export function getSexFromIdCard(idCard: string): string {
-  const sexNum = idCard.substring(17, 18)
+  // 3位顺序码
+  const sexNum = idCard.substring(14, 17)
   return (parseInt(sexNum) % 2).toString()
 }
 
