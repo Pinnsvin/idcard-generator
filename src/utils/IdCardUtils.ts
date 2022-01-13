@@ -100,7 +100,8 @@ export function getBirthdayArrayFromIdCard(idCard: string): Array<string> {
 export function getBirthday(age: number): string {
   const now = new Date()
   const year = now.getFullYear()
-  const month = now.getMonth() + 1
+  let month: string = (now.getMonth() + 1).toString()
+  month = month.length < 2 ? '0' + month : month
   const date = now.getDate()
   const newYear = year - age
   return `${newYear}-${month}-${date}`

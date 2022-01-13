@@ -11,7 +11,7 @@
         <el-input v-model="formData.idCard" placeholder="身份证号" @change="onChangeIdCard" />
       </el-form-item>
       <el-form-item label="性别">
-        <el-input v-model="state.sexText" placeholder="性别" disabled />
+        <el-input v-model="formData.sexText" placeholder="性别" />
       </el-form-item>
       <el-form-item label="住址">
         <el-input v-model="formData.address" placeholder="住址" />
@@ -24,8 +24,8 @@
           v-model="formData.startDate"
           type="date"
           placeholder="有效期起期"
-          format="YYYY-MM-DD"
-          value-format="YYYY-MM-DD"
+          format="YYYY-M-DD"
+          value-format="YYYY-M-DD"
         />
       </el-form-item>
       <el-form-item label="有效期类型">
@@ -47,8 +47,8 @@
           v-model="formData.endDate"
           type="date"
           placeholder="有效期止期"
-          format="YYYY-MM-DD"
-          value-format="YYYY-MM-DD"
+          format="YYYY-M-DD"
+          value-format="YYYY-M-DD"
         />
       </el-form-item>
       <el-form-item>
@@ -98,6 +98,9 @@ export default defineComponent({
     },
     idCard: {
       type: String
+    },
+    sexText: {
+      type: String
     }
   },
   setup(props) {
@@ -106,7 +109,7 @@ export default defineComponent({
       name: props.name || '',
       nation: '汉',
       idCard: props.idCard || '',
-      sexText: IdcardConstant.getSexByValue(getSexFromIdCard(props.idCard || ''))?.text || '',
+      sexText: props.sexText || '',
       address: '北京市东城区长安街一号院',
       office: '北京市公安局',
       validityType: '1',
@@ -118,15 +121,12 @@ export default defineComponent({
       name: initFormData.name,
       nation: initFormData.nation,
       idCard: initFormData.idCard,
+      sexText: initFormData.sexText,
       address: initFormData.address,
       office: initFormData.office,
       validityType: initFormData.validityType,
       startDate: initFormData.startDate,
       endDate: initFormData.endDate
-    })
-
-    const state = reactive({
-      sexText: IdcardConstant.getSexByValue(getSexFromIdCard(formData.idCard))?.text || ''
     })
 
     const validityTypeOptions = IdcardConstant.validityTypeData
@@ -138,7 +138,7 @@ export default defineComponent({
 
     const dateStr = computed(() => {
       if (formData.validityType === '3') {
-        return '长期有效'
+        return formData.startDate.replaceAll('-', '.') + '-' + '长期'
       }
       return formData.startDate.replaceAll('-', '.') + '-' + formData.endDate.replaceAll('-', '.')
     })
@@ -146,7 +146,7 @@ export default defineComponent({
     const onChangeIdCard = (value: string): void => {
       if (value != null && value.length === 18) {
         const sex = getSexFromIdCard(value)
-        state.sexText = IdcardConstant.getSexByValue(sex)?.text as string
+        formData.sexText = IdcardConstant.getSexByValue(sex)?.text as string
       }
     }
 
@@ -191,7 +191,7 @@ export default defineComponent({
           backContext.font = 'normal normal 300 20px 黑体'
           backContext.fillStyle = '#000'
           backContext.fillText(formData.name, 115, 85)
-          backContext.fillText(state.sexText, 115, 128)
+          backContext.fillText(formData.sexText, 115, 128)
           backContext.fillText(formData.nation, 245, 128)
           const arr = getBirthdayArrayFromIdCard(formData.idCard)
           backContext.fillText(arr[0], 115, 172)
@@ -253,7 +253,6 @@ export default defineComponent({
       validityTypeOptions,
       formData,
       imageData,
-      state,
       onChangeIdCard,
       onChangeValidityType,
       onSubmit,

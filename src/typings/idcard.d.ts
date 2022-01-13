@@ -22,6 +22,7 @@ declare module 'idCard' {
     name: string
     nation: string
     idCard: string
+    sexText: string
     address: string
     office: string
     validityType: string

@@ -75,7 +75,7 @@
           <el-button
             type="text"
             size="small"
-            @click="handleGenerateImage(scope.row.name, scope.row.idCard)"
+            @click="handleGenerateImage(scope.row.name, scope.row.idCard, scope.row.sex)"
           >生成照片</el-button>
         </template>
       </el-table-column>
@@ -197,12 +197,13 @@ export default defineComponent({
       })
     }
 
-    const handleGenerateImage = (_name: string, _idCard: string): void => {
+    const handleGenerateImage = (_name: string, _idCard: string, _sexText: string): void => {
       router.push({
         name: 'IdCardImage',
         params: {
           name: _name,
-          idCard: _idCard
+          idCard: _idCard,
+          sexText: _sexText
         }
       })
     }
