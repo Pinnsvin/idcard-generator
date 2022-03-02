@@ -64,11 +64,27 @@
   <div class="content">
     <el-table :data="tableData" stripe style="width: 100%">
       <el-table-column align="center" prop="relation" label="关系" />
-      <el-table-column align="center" prop="name" label="名字" />
-      <el-table-column align="center" prop="idCard" label="身份证号码" width="160" />
-      <el-table-column align="center" prop="mobile" label="手机号" />
+      <el-table-column align="center" prop="name" label="名字">
+        <template #default="scope">
+          <span @click="handleClickCopy(scope.row.name)">{{scope.row.name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="idCard" label="身份证号码" width="160">
+        <template #default="scope">
+          <span @click="handleClickCopy(scope.row.idCard)">{{scope.row.idCard}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="mobile" label="手机号">
+        <template #default="scope">
+          <span @click="handleClickCopy(scope.row.mobile)">{{scope.row.mobile}}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" prop="sex" label="性别" />
-      <el-table-column align="center" prop="birthday" label="出生日期" />
+      <el-table-column align="center" prop="birthday" label="出生日期">
+        <template #default="scope">
+          <span @click="handleClickCopy(scope.row.birthday)">{{scope.row.birthday}}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" prop="age" label="年龄" />
       <el-table-column align="center" fixed="right" label="操作">
         <template #default="scope">
@@ -90,10 +106,13 @@ import { generateIdCardInfo, getAge, getBirthday } from '@/utils/IdCardUtils'
 import { defineComponent, onMounted, reactive } from 'vue'
 import { RelationContext } from '@/service/idcard/RelationStrategy'
 import { useRouter } from 'vue-router'
+import useClipboard from 'vue-clipboard3'
+import { ElMessage } from 'element-plus'
 
 export default defineComponent({
   setup() {
     const router = useRouter()
+    const clipboard = useClipboard()
 
     const formData = reactive<IdCardInput>({
       age: 20,
@@ -208,6 +227,11 @@ export default defineComponent({
       })
     }
 
+    const handleClickCopy = async (value: string): Promise<void> => {
+      await clipboard.toClipboard(value)
+      ElMessage('已复制')
+    }
+
     onMounted(() => {
       onSubmit()
     })
@@ -225,7 +249,8 @@ export default defineComponent({
       onSubmitWithFamily,
       onSubmitWithParent,
       onSubmitWithBigFamily,
-      handleGenerateImage
+      handleGenerateImage,
+      handleClickCopy
     }
   }
 })

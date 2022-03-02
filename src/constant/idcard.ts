@@ -4,7 +4,7 @@ import { EnumData } from 'baseModel'
 // 加权因子
 const WEIGHTEDFACTOR: Array<number> = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
 // 校验码
-const CHECKSUM: Array<string> = ['1', '0', 'x', '9', '8', '7', '6', '5', '4', '3', '2']
+const CHECKSUM: Array<string> = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2']
 
 const sexData: Array<EnumData> = [
   { text: '男', value: '1' },
