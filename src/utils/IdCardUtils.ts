@@ -103,7 +103,8 @@ export function getBirthday(age: number): string {
   const year = now.getFullYear()
   let month: string = (now.getMonth() + 1).toString()
   month = month.length < 2 ? '0' + month : month
-  const date = now.getDate()
+  let date: string = now.getDate().toString()
+  date = date.length < 2 ? '0' + date : date
   const newYear = year - age
   return `${newYear}-${month}-${date}`
 }
