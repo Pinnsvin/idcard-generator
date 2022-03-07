@@ -18,16 +18,14 @@
 
 ## 安装
 
-### windows
-[我的小工具](https://gitee.com/Pinnsvin/myutils-app/releases)
+[我的小工具](https://github.com/Pinnsvin/myutils-app/releases)
 
-### linux
 
 ## 参与开发
 
 ### 下载项目
 ```bash
-git clone https://gitee.com/Pinnsvin/myutils-app.git
+git clone https://github.com/Pinnsvin/myutils-app.git
 ```
 
 ### 启动项目
