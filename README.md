@@ -1,4 +1,4 @@
-# myutils-app
+# 身份证生成工具
 
 ![](./images/home.jpg)
 
@@ -18,14 +18,14 @@
 
 ## 安装
 
-[我的小工具](https://github.com/Pinnsvin/myutils-app/releases)
+[我的小工具](https://github.com/Pinnsvin/idcard-generator/releases)
 
 
 ## 参与开发
 
 ### 下载项目
 ```bash
-git clone https://github.com/Pinnsvin/myutils-app.git
+git clone https://github.com/Pinnsvin/idcard-generator.git
 ```
 
 ### 启动项目
@@ -37,3 +37,6 @@ yarn run electron:serve
 ```bash
 yarn run electron:build
 ```
+
+## 声明
+本项目仅做学习与测试使用。

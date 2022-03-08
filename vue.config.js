@@ -3,8 +3,8 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
-        appId: 'myutils-app',
-        productName: '我的小工具',
+        appId: 'idcard-generator',
+        productName: '身份证生成器',
         copyright: 'Copyright © 2021 摩拉克斯'
       }
     }
